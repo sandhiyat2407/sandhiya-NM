@@ -1,0 +1,54 @@
+import random
+import time
+
+# Mock sensor data
+def get_sensor_data():
+    return {
+        'LiDAR': [random.randint(1, 100) for _ in range(5)],
+        'Camera': random.choice(['Clear', 'Obstacle']),
+        'IMU': random.uniform(-1, 1)
+    }
+
+# Basic SLAM simulation
+def update_map(sensor_data):
+    map_update = f"Map updated with LiDAR: {sensor_data['LiDAR']} and IMU: {sensor_data['IMU']:.2f}"
+    print(map_update)
+    return map_update
+
+# Path planning logic
+def plan_path(sensor_data):
+    if sensor_data['Camera'] == 'Obstacle' or min(sensor_data['LiDAR']) < 20:
+        return "Re-routing to avoid obstacle."
+    return "Path is clear. Proceeding on current route."
+
+# Decision-making
+def make_decision(sensor_data):
+    path_status = plan_path(sensor_data)
+    print(f"AI Decision: {path_status}")
+    return path_status
+
+# Safety protocols
+def check_safety(sensor_data):
+    if min(sensor_data['LiDAR']) < 10:
+        print("Emergency Stop Triggered!")
+        return False
+    return True
+
+# Main loop (demo simulation)
+def autonomous_navigation_demo():
+    print("Starting Autonomous Navigation Demo...\n")
+    for _ in range(5):
+        data = get_sensor_data()
+        print(f"Sensor Data: {data}")
+        update_map(data)
+        decision = make_decision(data)
+        if not check_safety(data):
+            print("System halted due to safety concerns.\n")
+            break
+        print("Continuing navigation...\n")
+        time.sleep(1)
+
+    print("Demo completed.")
+
+# Run the demo
+autonomous_navigation_demo()
